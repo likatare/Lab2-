@@ -29,7 +29,8 @@ namespace Lab2
             GridViewRow row = GridView1.Rows[e.RowIndex];
 
             TextBox textPostTime = (TextBox)(row.Cells[0].Controls[0]);
-            TextBox textEvent = (TextBox)(row.Cells[1].Controls[0]);
+            //TextBox textEvent = (TextBox)(row.Cells[1].Controls[0]);
+            TextBox textEvent = (TextBox)row.FindControl("txtEvent");
 
             var item = db.DatabaseLog.Where(x => x.DatabaseLogID == id).First();
             item.PostTime = DateTime.Parse(textPostTime.Text);
@@ -72,11 +73,30 @@ namespace Lab2
             BindData();
         }
 
+        protected void GridView1_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            // Response.Write(e.CommandName);
+
+            if (e.CommandName == "Insert")
+            {
+                var db = new AdventureWorks2019Entities();
+                var item = new DatabaseLog();
+                item.Event = ((TextBox)GridView1.FooterRow.FindControl("txtNewEvent")).Text;
+                item.PostTime = DateTime.Now;
+                item.TSQL = "manually added";
+                item.XmlEvent = "";
+                item.DatabaseUser = User.Identity.Name;
+                db.DatabaseLog.Add(item);
+                db.SaveChanges();
+
+            }
+            BindData();
+        }
 
         private void BindData()
         {
             var db = new AdventureWorks2019Entities();
-            var dbLog = from log in db.DatabaseLog select log;
+            var dbLog = from log in db.DatabaseLog orderby log.PostTime descending select log;
             if (dbLog != null)
             {
                 GridView1.DataSource = dbLog.ToList();
