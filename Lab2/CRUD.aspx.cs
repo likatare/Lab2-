@@ -24,23 +24,30 @@ namespace Lab2
 
         protected void GridView1_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-            var db = new AdventureWorks2019Entities();
+
             int id = int.Parse(GridView1.DataKeys[e.RowIndex].Value.ToString());
             GridViewRow row = GridView1.Rows[e.RowIndex];
 
-            TextBox textPostTime = (TextBox)(row.Cells[0].Controls[0]);
+            //TextBox textPostTime = (TextBox)(row.Cells[1].Controls[0]);
+             TextBox textPostTime = (TextBox)row.FindControl("txtPostTime");
             //TextBox textEvent = (TextBox)(row.Cells[1].Controls[0]);
             TextBox textEvent = (TextBox)row.FindControl("txtEvent");
 
-            var item = db.DatabaseLog.Where(x => x.DatabaseLogID == id).First();
-            item.PostTime = DateTime.Parse(textPostTime.Text);
-            item.Event = textEvent.Text;
-            db.SaveChanges();
             //Reset the edit index.
             GridView1.EditIndex = -1;
 
+            var db = new AdventureWorks2019Entities();
+            var item = db.DatabaseLog.Where(x => x.DatabaseLogID == id).First();
+
+            item.PostTime = DateTime.Parse(textPostTime.Text);
+            item.Event = textEvent.Text;
+            db.SaveChanges();
+
             //Bind data to the GridView control.
             BindData();
+
+
+
         }
 
         protected void GridView1_RowEditing(object sender, GridViewEditEventArgs e)
@@ -80,17 +87,19 @@ namespace Lab2
             if (e.CommandName == "Insert")
             {
                 var db = new AdventureWorks2019Entities();
-                var item = new DatabaseLog();
-                item.Event = ((TextBox)GridView1.FooterRow.FindControl("txtNewEvent")).Text;
-                item.PostTime = DateTime.Now;
-                item.TSQL = "manually added";
-                item.XmlEvent = "";
-                item.DatabaseUser = User.Identity.Name;
+                var item = new DatabaseLog
+                {
+                    Event = ((TextBox)GridView1.FooterRow.FindControl("txtNewEvent")).Text,
+                    PostTime = DateTime.Now,
+                    TSQL = "manually added",
+                    XmlEvent = "",
+                    DatabaseUser = User.Identity.Name
+                };
                 db.DatabaseLog.Add(item);
                 db.SaveChanges();
-
+                BindData();
             }
-            BindData();
+
         }
 
         private void BindData()

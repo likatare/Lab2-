@@ -5,6 +5,9 @@
     <h3>Your CRUD page.</h3>
 
     <%--<asp:BoundField DataField="Event" HeaderText="Event" SortExpression="Event" />--%>
+    <%--<asp:BoundField DataField="PostTime" HeaderText="Post timer" SortExpression="PostTime">  </asp:BoundField>--%>
+
+
 
     <asp:GridView ID="GridView1" runat="server" Width="100%" CssClass="table table-striped table-bordered table-hover"
         DataKeyNames="DatabaseLogId" AutoGenerateColumns="false" EmptyDataText="There are no data records to display"
@@ -15,26 +18,32 @@
         OnRowUpdating="GridView1_RowUpdating"
         OnRowDeleting="GridView1_RowDeleting"
         ShowFooter="true"
-        OnRowCommand="GridView1_RowCommand"
-        >
+        OnRowCommand="GridView1_RowCommand">
 
 
         <Columns>
-            <asp:BoundField  DataField="DatabaseLogId" HeaderText="DatabaseLogId" SortExpression="DatabaseLogId" />
-            <asp:BoundField DataField="PostTime" HeaderText="Post timer" SortExpression="PostTime" />
+            <asp:BoundField DataField="DatabaseLogId"  HeaderText="DatabaseLogId" SortExpression="DatabaseLogId" />
 
-            <asp:TemplateField>
+            <asp:TemplateField HeaderText="Post timer">
+                <ItemTemplate>
+                    <asp:Label ID="Label2" runat="server" Text='<%#Bind("PostTime")%>' />
+                </ItemTemplate>
+                <EditItemTemplate>
+                    <asp:TextBox ID="txtPostTime" runat="server" CssClass="form-control" Text='<%#Bind("PostTime")%>' />
+                    <asp:RequiredFieldValidator ID="reqPostTime" runat="server" ControlToValidate="txtPostTime" ErrorMessage="(required)" />
+                </EditItemTemplate>
+            </asp:TemplateField>
+            <asp:TemplateField HeaderText="Event">
                 <ItemTemplate>
                     <asp:Label ID="Label1" runat="server" Text='<%#Bind("Event")%>' />
                 </ItemTemplate>
                 <EditItemTemplate>
-                    <asp:TextBox ID="txtEvent" runat="server" Text='<%#Bind("Event")%>' />
+                    <asp:TextBox ID="txtEvent" runat="server" CssClass="form-control" Text='<%#Bind("Event")%>' />
                     <asp:RequiredFieldValidator ID="reqEvent" runat="server" ControlToValidate="txtEvent" ErrorMessage="(required)" />
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:TextBox ID="txtNewEvent" runat="server" />
                 </FooterTemplate>
-
             </asp:TemplateField>
 
             <asp:TemplateField>
@@ -42,8 +51,8 @@
                     <asp:LinkButton ID="lnkEdit" runat="server" Text="Edit" CommandName="Edit" />
                 </ItemTemplate>
                 <EditItemTemplate>
-                    <asp:LinkButton ID="lnkUpdate" runat="server" Text="Update" CommandName="Update"  />
-                    <asp:LinkButton  ID="lnkCancel" runat="server" Text="Cancel" CommandName="Cancel" />
+                    <asp:LinkButton ID="lnkUpdate" runat="server" Text="Update" CommandName="Update" />
+                    <asp:LinkButton ID="lnkCancel" runat="server" Text="Cancel" CommandName="Cancel" />
                 </EditItemTemplate>
                 <FooterTemplate>
                     <asp:LinkButton ID="lnkAdd" runat="server" Text="Add" CommandName="Insert" CausesValidation="false" />

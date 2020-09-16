@@ -54,7 +54,7 @@ namespace Lab2
 
         protected void BtnCancel_Click(object sender, EventArgs e)
         {
-            var kalle = sender;
+           
             Response.Redirect("~/CRUD");
 
 
@@ -63,12 +63,14 @@ namespace Lab2
         protected void BtnCreate_Click(object sender, EventArgs e)
         {
             var db = new AdventureWorks2019Entities();
-            var item = new DatabaseLog();
-            item.Event = txtEvent.Text;
-            item.PostTime = DateTime.Parse(txtTimestamp.Text);
-            item.TSQL = "manually added";
-            item.XmlEvent = "";
-            item.DatabaseUser = User.Identity.Name;
+            var item = new DatabaseLog
+            {
+                Event = txtEvent.Text,
+                PostTime = DateTime.Parse(txtTimestamp.Text),
+                TSQL = "manually added",
+                XmlEvent = "",
+                DatabaseUser = User.Identity.Name
+            };
             db.DatabaseLog.Add(item);
             db.SaveChanges();
             
